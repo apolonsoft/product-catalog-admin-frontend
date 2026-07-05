@@ -1,7 +1,10 @@
+import { API_BASE_URL, parseError } from './client'
+
 export interface SafeUser {
   id: string
   email: string
-  name?: string
+  firstName?: string
+  lastName?: string
   role?: string
 }
 
@@ -13,31 +16,6 @@ export interface LoginCredentials {
 export interface LoginResponse {
   accessToken: string
   user: SafeUser
-}
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001'
-
-class AuthApiError extends Error {
-  statusCode: number
-
-  constructor(message: string, statusCode: number) {
-    super(message)
-    this.statusCode = statusCode
-    this.name = 'AuthApiError'
-  }
-}
-
-async function parseError(response: Response): Promise<AuthApiError> {
-  let message = `Request failed: ${response.statusText}`
-  try {
-    const body = (await response.json()) as { message?: string }
-    if (body.message) {
-      message = body.message
-    }
-  } catch {
-    // ignore non-JSON error bodies
-  }
-  return new AuthApiError(message, response.status)
 }
 
 export async function login(credentials: LoginCredentials): Promise<LoginResponse> {
