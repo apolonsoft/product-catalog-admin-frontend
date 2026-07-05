@@ -1,25 +1,52 @@
 <script lang="ts" setup>
-import { useForm } from 'vee-validate';
-import { object, string, email } from 'zod';
-import { toTypedSchema } from '@vee-validate/zod';
+import { watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useForm } from 'vee-validate'
+import { boolean, object, string, email } from 'zod'
+import { toTypedSchema } from '@vee-validate/zod'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+const router = useRouter()
+const route = useRoute()
 
 const { meta, defineField, handleSubmit, errors } = useForm({
   validationSchema: toTypedSchema(
     object({
       email: email('Please enter a valid email address').nonempty('Email is required').default(''),
       password: string().min(8, 'Password must be at least 8 characters long').nonempty('Password is required').default(''),
+      rememberMe: boolean().default(false),
     })
   ),
 });
 
 const [emailInput, emailInputAttrs] = defineField('email');
 const [passwordInput, passwordInputAttrs] = defineField('password');
+const [rememberMe, rememberMeAttrs] = defineField('rememberMe');
 
+watch(
+  () => authStore.isAuthenticated,
+  (isAuthenticated) => {
+    if (isAuthenticated) {
+      const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/'
+      router.replace(redirect)
+    }
+  },
+  { immediate: true }
+)
 
-const onSubmit = handleSubmit((values) => {
-  console.log('Form submitted with values:', values);
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    await authStore.login(
+      { email: values.email, password: values.password },
+      values.rememberMe
+    )
+    const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/'
+    await router.replace(redirect)
+  } catch {
+    // error is already stored in authStore.error
+  }
 });
-
 </script>
 
 <template>
@@ -115,14 +142,19 @@ const onSubmit = handleSubmit((values) => {
             </div>
 
             <div class="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox"
+              <input id="remember-me" name="remember-me" type="checkbox" v-model="rememberMe" v-bind="rememberMeAttrs"
                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-600 dark:bg-white/5 dark:focus:ring-indigo-500" />
               <label for="remember-me" class="ml-2 block text-sm text-gray-900 dark:text-gray-100">Remember me</label>
             </div>
 
-            <button type="submit" :disabled="!meta.touched"
-              class="flex w-full justify-center rounded-lg bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">
-              Sign in
+            <div v-if="authStore.error" class="rounded-md bg-red-50 p-3 dark:bg-red-900/20">
+              <p class="text-sm text-red-700 dark:text-red-400">{{ authStore.error }}</p>
+            </div>
+
+            <button type="submit" :disabled="!meta.valid || authStore.loading"
+              class="flex w-full justify-center rounded-lg bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">
+              <span v-if="authStore.loading">Signing in...</span>
+              <span v-else>Sign in</span>
             </button>
           </form>
 
