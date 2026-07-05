@@ -1,8 +1,14 @@
 import { test, expect } from '@playwright/test'
 
-// See here how to get started:
-// https://playwright.dev/docs/intro
-test('visits the app root url', async ({ page }) => {
+test('unauthenticated root visit lands on the login page', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('h1')).toHaveText('You did it!')
+  await expect(page.locator('h1')).toHaveText('Sign in to your account')
+})
+
+test('login form renders expected email and password controls', async ({ page }) => {
+  await page.goto('/auth/login')
+  await expect(page.locator('input#email')).toBeVisible()
+  await expect(page.locator('input#password')).toBeVisible()
+  await expect(page.locator('input#remember-me')).toBeVisible()
+  await expect(page.locator('button[type="submit"]')).toHaveText('Sign in')
 })

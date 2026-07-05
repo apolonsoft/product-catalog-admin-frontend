@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import {
   Dialog,
   DialogPanel,
@@ -23,6 +24,13 @@ import {
 
 const sidebarOpen = ref(false)
 const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
+
+function logout() {
+  authStore.logout()
+  router.push({ name: 'login' })
+}
 
 interface NavigationItem {
   name: string
@@ -246,10 +254,13 @@ const inactiveItemClasses =
           <button
             type="button"
             class="flex items-center gap-2 rounded-full p-1 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+            @click="logout"
           >
-            <span class="sr-only">Open user menu</span>
+            <span class="sr-only">Log out</span>
             <UserCircleIcon class="h-7 w-7" aria-hidden="true" />
-            <span class="hidden text-sm font-medium text-gray-700 sm:block">Admin</span>
+            <span class="hidden text-sm font-medium text-gray-700 sm:block">
+              {{ authStore.user?.name ?? authStore.user?.email ?? 'Admin' }}
+            </span>
           </button>
         </div>
       </header>
