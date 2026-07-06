@@ -10,6 +10,7 @@ import ProductsView from '@/views/ProductsView.vue'
 import CustomersView from '@/views/CustomersView.vue'
 import OrdersView from '@/views/OrdersView.vue'
 import CategoriesView from '@/views/CategoriesView.vue'
+import ProfileView from '@/views/ProfileView.vue'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -39,6 +40,9 @@ const router = createRouter({
         },
         {
           path: '/categories', name: 'categories', component: CategoriesView
+        },
+        {
+          path: '/profile', name: 'profile', component: ProfileView
         },
         {
           path: '/settings', name: 'settings', component: SettingsView

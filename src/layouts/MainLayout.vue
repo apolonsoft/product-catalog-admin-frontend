@@ -13,9 +13,13 @@ const authStore = useAuthStore()
 
 const isCurrentRoute = computed(() => (path?: string) => path !== undefined && route.path === path)
 
-const userLabel = computed(
-  () => authStore.user?.name ?? authStore.user?.email ?? 'Admin'
-)
+const userLabel = computed(() => {
+  const user = authStore.user
+  if (!user) return 'Admin'
+
+  const fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()
+  return fullName || user.email
+})
 
 function logout() {
   authStore.logout()
