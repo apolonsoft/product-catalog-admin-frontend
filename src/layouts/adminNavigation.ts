@@ -5,6 +5,7 @@ import {
   ShoppingCartIcon,
   Squares2X2Icon,
   UsersIcon,
+  InformationCircleIcon
 } from '@heroicons/vue/24/outline'
 
 export interface NavigationItem {
@@ -15,11 +16,12 @@ export interface NavigationItem {
 
 export const adminNavigation: NavigationItem[] = [
   { name: 'Dashboard', to: '/', icon: HomeIcon },
-  { name: 'Products', icon: CubeIcon },
-  { name: 'Categories', icon: Squares2X2Icon },
-  { name: 'Orders', icon: ShoppingCartIcon },
-  { name: 'Customers', icon: UsersIcon },
-  { name: 'Settings', to: '/about', icon: Cog6ToothIcon },
+  { name: 'Products', to: '/products', icon: CubeIcon },
+  { name: 'Categories', to: '/categories', icon: Squares2X2Icon },
+  { name: 'Orders', to: '/orders', icon: ShoppingCartIcon },
+  { name: 'Customers', to: '/customers', icon: UsersIcon },
+  { name: 'Settings', to: '/settings', icon: Cog6ToothIcon },
+  { name: 'About', to: '/about', icon: InformationCircleIcon },
 ]
 
 export const baseItemClasses =
