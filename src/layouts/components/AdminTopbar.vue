@@ -3,8 +3,8 @@ import {
   Bars3Icon,
   BellIcon,
   MagnifyingGlassIcon,
-  UserCircleIcon,
 } from '@heroicons/vue/24/outline'
+import AdminUserMenu from './AdminUserMenu.vue'
 
 interface Props {
   userLabel: string
@@ -63,15 +63,7 @@ const emit = defineEmits<{
         />
       </button>
 
-      <button
-        type="button"
-        class="flex items-center gap-2 rounded-full p-1 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-        @click="emit('logout')"
-      >
-        <span class="sr-only">Log out</span>
-        <UserCircleIcon class="h-7 w-7" aria-hidden="true" />
-        <span class="hidden text-sm font-medium text-gray-700 sm:block">{{ userLabel }}</span>
-      </button>
+      <AdminUserMenu :user-label="userLabel" @logout="emit('logout')" />
     </div>
   </header>
 </template>
