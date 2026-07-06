@@ -1,10 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import HomeView from '../views/HomeView.vue'
-import MainLayout from '../layouts/MainLayout.vue'
-import AuthLayout from '../layouts/AuthLayout.vue'
+import DashboardView from '@/views/DashboardView.vue'
+import SettingsView from '@/views/SettingsView.vue'
+import MainLayout from '@/layouts/MainLayout.vue'
+import AuthLayout from '@/layouts/AuthLayout.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import ProductsView from '@/views/ProductsView.vue'
+import CustomersView from '@/views/CustomersView.vue'
+import OrdersView from '@/views/OrdersView.vue'
+import CategoriesView from '@/views/CategoriesView.vue'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -21,7 +26,22 @@ const router = createRouter({
       meta: { requiresAuth: true },
       children: [
         {
-          path: '', name: 'home', component: HomeView
+          path: '', name: 'home', component: DashboardView
+        },
+        {
+          path: '/products', name: 'products', component: ProductsView
+        },
+        {
+          path: '/customers', name: 'customers', component: CustomersView
+        },
+        {
+          path: '/orders', name: 'orders', component: OrdersView
+        },
+        {
+          path: '/categories', name: 'categories', component: CategoriesView
+        },
+        {
+          path: '/settings', name: 'settings', component: SettingsView
         },
         {
           path: '/about',

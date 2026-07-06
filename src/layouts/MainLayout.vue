@@ -25,26 +25,13 @@ function logout() {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <AdminSidebar
-      mode="mobile"
-      :open="sidebarOpen"
-      :navigation="adminNavigation"
-      :is-current-route="isCurrentRoute"
-      @close="sidebarOpen = false"
-    />
+    <AdminSidebar mode="mobile" :open="sidebarOpen" :navigation="adminNavigation" :is-current-route="isCurrentRoute"
+      @close="sidebarOpen = false" />
 
-    <AdminSidebar
-      mode="desktop"
-      :navigation="adminNavigation"
-      :is-current-route="isCurrentRoute"
-    />
+    <AdminSidebar mode="desktop" :navigation="adminNavigation" :is-current-route="isCurrentRoute" />
 
     <div class="flex min-h-screen flex-col lg:pl-64">
-      <AdminTopbar
-        :user-label="userLabel"
-        @open-sidebar="sidebarOpen = true"
-        @logout="logout"
-      />
+      <AdminTopbar :user-label="userLabel" @open-sidebar="sidebarOpen = true" @logout="logout" />
 
       <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl">
