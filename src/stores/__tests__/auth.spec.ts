@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 const TOKEN_KEY = 'admin_auth_token'
 const USER_KEY = 'admin_auth_user'
 
-const mockUser = { id: '1', email: 'admin@example.com', name: 'Admin' }
+const mockUser = { id: '1', email: 'admin@example.com', firstName: 'Admin' }
 const mockResponse = { accessToken: 'test-token', user: mockUser }
 
 function mockFetch(response: Response) {
@@ -90,5 +90,30 @@ describe('useAuthStore', () => {
     expect(store.accessToken).toBe('hydrated-token')
     expect(store.user).toEqual(mockUser)
     expect(store.isAuthenticated).toBe(true)
+  })
+
+  it('updates and persists the current user in localStorage', async () => {
+    mockFetch(new Response(JSON.stringify(mockResponse), { status: 200 }))
+    const store = useAuthStore()
+    await store.login({ email: 'admin@example.com', password: 'password' }, true)
+
+    const updatedUser = { ...mockUser, firstName: 'Updated', lastName: 'Admin' }
+    store.persistUser(updatedUser)
+
+    expect(store.user).toEqual(updatedUser)
+    expect(localStorage.getItem(USER_KEY)).toBe(JSON.stringify(updatedUser))
+  })
+
+  it('updates and persists the current user in sessionStorage', async () => {
+    mockFetch(new Response(JSON.stringify(mockResponse), { status: 200 }))
+    const store = useAuthStore()
+    await store.login({ email: 'admin@example.com', password: 'password' }, false)
+
+    const updatedUser = { ...mockUser, firstName: 'Updated', lastName: 'Admin' }
+    store.persistUser(updatedUser)
+
+    expect(store.user).toEqual(updatedUser)
+    expect(sessionStorage.getItem(USER_KEY)).toBe(JSON.stringify(updatedUser))
+    expect(localStorage.getItem(USER_KEY)).toBeNull()
   })
 })
