@@ -8,6 +8,7 @@ function createTestRouter() {
     history: createWebHistory(),
     routes: [
       { path: '/', name: 'home', component: { template: '<div>Home</div>' } },
+      { path: '/profile', name: 'profile', component: { template: '<div>Profile</div>' } },
       { path: '/settings', name: 'settings', component: { template: '<div>Settings</div>' } },
     ],
   })
@@ -71,19 +72,19 @@ describe('AdminUserMenu', () => {
     expect(wrapper.emitted('logout')).toHaveLength(1)
   })
 
-  it('links Profile to the settings route', async () => {
+  it('links Profile to the profile route', async () => {
     const { wrapper, router } = await mountAdminUserMenu()
 
     await wrapper.find('button').trigger('click')
     await flushPromises()
 
-    const profileLink = wrapper.find('a[href="/settings"]')
+    const profileLink = wrapper.find('a[href="/profile"]')
     expect(profileLink.exists()).toBe(true)
     expect(profileLink.text()).toContain('Profile')
 
     await profileLink.trigger('click')
     await flushPromises()
 
-    expect(router.currentRoute.value.name).toBe('settings')
+    expect(router.currentRoute.value.name).toBe('profile')
   })
 })

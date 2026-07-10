@@ -76,6 +76,14 @@ export const useAuthStore = defineStore('auth', () => {
     clearStorage()
   }
 
+  function persistUser(updatedUser: authApi.SafeUser) {
+    user.value = updatedUser
+    const rememberMe = localStorage.getItem(TOKEN_KEY) !== null
+    if (accessToken.value) {
+      persist(accessToken.value, updatedUser, rememberMe)
+    }
+  }
+
   async function refreshMe() {
     if (!accessToken.value) return
 
@@ -99,6 +107,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     login,
     logout,
+    persistUser,
     refreshMe,
     hydrate,
   }

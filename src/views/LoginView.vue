@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { boolean, object, string, email } from 'zod'
@@ -9,6 +9,8 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
+
+const passwordChanged = computed(() => route.query.passwordChanged === '1')
 
 const { meta, defineField, handleSubmit, errors } = useForm({
   validationSchema: toTypedSchema(
@@ -106,6 +108,12 @@ const onSubmit = handleSubmit(async (values) => {
             </h1>
             <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
               Welcome back! Please enter your details.
+            </p>
+          </div>
+
+          <div v-if="passwordChanged" class="mb-6 rounded-md bg-green-50 p-3 dark:bg-green-900/20">
+            <p class="text-sm text-green-700 dark:text-green-400">
+              Password changed successfully. Please sign in with your new password.
             </p>
           </div>
 

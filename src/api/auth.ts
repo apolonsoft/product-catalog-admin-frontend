@@ -1,11 +1,24 @@
 import { API_BASE_URL, parseError } from './client'
 
+export interface FileDto {
+  id: string
+  link: string
+  type: string
+  name: string
+  size: number
+  status: string
+}
+
 export interface SafeUser {
   id: string
   email: string
-  firstName?: string
-  lastName?: string
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
   role?: string
+  status?: string
+  avatarFileId?: string | null
+  avatarFile?: FileDto | null
 }
 
 export interface LoginCredentials {
